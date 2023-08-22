@@ -175,7 +175,7 @@ if __name__ == "__main__":
         eval(f"example{parargs.nr}()")
     else:
         # run all examples
-        for nr in [1, 2, 3]:
+        for nr in [1, 2]:
             if nr > 1:
                 print()
             print(f"Running example {nr}.")

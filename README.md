@@ -13,7 +13,10 @@ After the fitting process is done, the GMM $f^{(K)}$ approximates the unknown PD
 Step 1 only needs to be done once and it can be done in a preparatory offline training phase.
 
 ### Step 2: Estimate channels
-Assuming that $f^{(K)}$ is a good approximation of $f_{\mathbf{h}}$, the GMM estimator is the function $g$ which minimizes the mean square error $$`\mathrm{E}\big[\| \mathbf{h} - g(\mathbf{y}) \|^2\big].`$$
+Assuming that $f^{(K)}$ is a good approximation of $f_{\mathbf{h}}$, the GMM estimator is the function $g$ which minimizes the mean square error
+```math
+\mathrm{E}\big[\| \mathbf{h} - g(\mathbf{y}) \|^2\big].
+```
 The GMM estimator $g$ can be found in closed form and is implemented in [gmm_estimator.py](https://github.com/michael-koller-91/gmm-estimator/blob/main/gmm_estimator.py).
 The file [examples.py](https://github.com/michael-koller-91/gmm-estimator/blob/main/examples.py) demonstrates how [gmm_estimator.py](https://github.com/michael-koller-91/gmm-estimator/blob/main/gmm_estimator.py) can be used. See also the next section below.
 

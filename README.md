@@ -43,7 +43,7 @@ This repository is joint work of Michael Koller and Benedikt Fesl.
 The implementation makes use of Benedikt Fesl's repository [GMM_cplx](https://github.com/benediktfesl/GMM_cplx) which allows fitting a GMM with complex-valued quantities.
 
 ### Papers
-The following reference provide more details and properties of the GMM estimator.
+The following reference provides more details and properties of the GMM estimator.
 
 - Koller, Fesl, Turan, Utschick, "An Asymptotically MSE-Optimal Estimator Based on Gaussian Mixture Models," *IEEE Trans. Signal. Process.*, 2022. [[IEEEXplore]](https://ieeexplore.ieee.org/document/9842343) [[arXiv]](https://arxiv.org/abs/2112.12499)
 

@@ -22,6 +22,11 @@ The file [examples.py](https://github.com/michael-koller-91/gmm-estimator/blob/m
 
 For more details, kindly take a look at the first two references below.
 
+## Requirements
+The code is written in Python.
+Required packages are `numpy`, `scikit-learn`, and `scipy`.
+To generate plots, `matplotlib` is required as well.
+
 ## How to use the estimator
 The file [examples.py](https://github.com/michael-koller-91/gmm-estimator/blob/main/examples.py) demonstrates the use of the GMM estimator in various settings.
 Invoking

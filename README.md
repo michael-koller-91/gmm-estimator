@@ -45,9 +45,8 @@ The implementation makes use of Benedikt Fesl's repository [GMM_cplx](https://gi
 ### Papers
 The following two references provide more details and properties of the GMM estimator.
 
-- Koller, Fesl, Turan, Utschick, "An Asymptotically Optimal Approximation of the Conditional Mean Channel Estimator Based on Gaussian Mixture Models," ICASSP, 2022.
-[[IEEEXplore](https://ieeexplore.ieee.org/document/9747226)] [[arXiv](https://arxiv.org/abs/2111.11064)]
-- Koller, Fesl, Turan, Utschick, "An Asymptotically MSE-Optimal Estimator Based on Gaussian Mixture Models," IEEE Trans. Signal. Process., 2022. [[IEEEXplore]](https://ieeexplore.ieee.org/document/9842343) [[arXiv]](https://arxiv.org/abs/2112.12499)
+- Koller, Fesl, Turan, Utschick, "An Asymptotically MSE-Optimal Estimator Based on Gaussian Mixture Models," *IEEE Trans. Signal. Process.*, 2022. [[IEEEXplore]](https://ieeexplore.ieee.org/document/9842343) [[arXiv]](https://arxiv.org/abs/2112.12499)
+- Koller, Fesl, Turan, Utschick, "An Asymptotically Optimal Approximation of the Conditional Mean Channel Estimator Based on Gaussian Mixture Models," *IEEE Int. Conf. Acoust., Speech, Signal Process. (ICASSP)*, 2022. [[IEEEXplore](https://ieeexplore.ieee.org/document/9747226)] [[arXiv](https://arxiv.org/abs/2111.11064)]
 
 The estimator has been used in all the following references.
 - N. Turan, B. Fesl, M. Grundei, M. Koller, and W. Utschick, “Evaluation of a Gaussian Mixture Model-based Channel Estimator using Measurement Data,” in *Int. Symp. Wireless Commun. Syst. (ISWCS)*, 2022. [[IEEEXplore]](https://ieeexplore.ieee.org/abstract/document/9940363)

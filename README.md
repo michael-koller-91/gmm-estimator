@@ -6,7 +6,7 @@ It is assumed that the channel $\mathbf{h} \sim f_{\mathbf{h}}$ is a realization
 Using the estimator is a two-step process.
 
 ### Step 1: Train the estimator
-Training data $\{\mathbf{h}_t\}_{t=1}^{T}$ is used to fit a GMM $$f^{(K)}(\mathbf{h}) = \sum_{k=1}^K p(k) \mathcal{N}_{\mathbb{C}}(\mathbf{h}; \mathbf{\mu}_k, \mathbf{C}_k)$$
+Training data $`\{\mathbf{h}_t\}_{t=1}^{T}`$ is used to fit a GMM $$f^{(K)}(\mathbf{h}) = \sum_{k=1}^K p(k) \mathcal{N}_{\mathbb{C}}(\mathbf{h}; \mathbf{\mu}_k, \mathbf{C}_k)$$
 where $K$ is the number of GMM components and $p(k)$, $\mathbf{\mu}_k$, and $\mathbf{C}_k$ are the mixing coefficient, mean vector, and covariance matrix of component $k$, respectively.
 After the fitting process is done, the GMM $f^{(K)}$ approximates the unknown PDF $f_{\mathbf{h}}$ of the channels.
 

@@ -55,8 +55,8 @@ def example1():
     #
     h_eval = standard_normal_cplx(n_eval, n_dim, rng)
     noise_eval = standard_normal_cplx(n_eval, n_dim, rng)
-    # noisy observations, y = h + n, the SNR is 0 dB
-    snr_dB = 0
+    noise_covariance = np.eye(n_dim, dtype=complex)
+    # noisy observations, y = h + n
     y_eval = h_eval + noise_eval
 
     #
@@ -66,13 +66,15 @@ def example1():
 
     # use all components for the evaluation
     h_est = gmm_estimator.estimate(
-        y_eval, snr_dB, n_dim, n_components_or_probability=1.0
+        y_eval, noise_covariance, n_dim, n_components_or_probability=1.0
     )
     print("MSE with n_components_or_probability=1.0:", mse(h_est, h_eval))
     del h_est
 
     # use the top 3 components for the evaluation
-    h_est = gmm_estimator.estimate(y_eval, snr_dB, n_dim, n_components_or_probability=3)
+    h_est = gmm_estimator.estimate(
+        y_eval, noise_covariance, n_dim, n_components_or_probability=3
+    )
     print("MSE with n_components_or_probability=3:", mse(h_est, h_eval))
     del h_est
 
@@ -130,8 +132,8 @@ def example2():
     #
     h_eval = standard_normal_cplx(n_eval, n_dim, rng)
     noise_eval = standard_normal_cplx(n_eval, n_dim_obs, rng)
-    # noisy observations, y = A h + n, the SNR is 0 dB
-    snr_dB = 0
+    noise_covariance = np.eye(n_dim_obs, dtype=complex)
+    # noisy observations, y = A h + n
     y_eval = np.squeeze(np.matmul(A, np.expand_dims(h_eval, 2))) + noise_eval
 
     #
@@ -140,13 +142,13 @@ def example2():
     tic = time.time()
 
     h_est = gmm_estimator.estimate(
-        y_eval, snr_dB, n_dim, A=A, n_components_or_probability=1.0
+        y_eval, noise_covariance, n_dim, A=A, n_components_or_probability=1.0
     )
     print("MSE with n_components_or_probability=1.0:", mse(h_est, h_eval))
     del h_est
 
     h_est = gmm_estimator.estimate(
-        y_eval, snr_dB, n_dim, A=A, n_components_or_probability=3
+        y_eval, noise_covariance, n_dim, A=A, n_components_or_probability=3
     )
     print("MSE with n_components_or_probability=3:", mse(h_est, h_eval))
     del h_est

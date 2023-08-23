@@ -7,34 +7,35 @@ from scipy import linalg as scilinalg
 class GmmEstimator(gmm_cplx.GaussianMixtureCplx):
     def estimate(
         self,
-        y: npt.ArrayLike,
-        snr_dB: float,
-        n_antennas: int,
+        y: npt.NDArray,
+        noise_covariance: npt.NDArray,
+        n_dim: int,
         A: npt.NDArray = None,
-        n_components_or_probability: float = 1,
-    ):
+        n_components_or_probability: float = 1.0,
+    ) -> npt.NDArray:
         """
-        Use the noise covariance matrix and the matrix A to update the
-        covariance matrices of the Gaussian mixture model. This GMM is then
-        used for channel estimation from y.
+        Estimate channel vectors.
 
         Args:
-            y: A 2D complex numpy array representing the observations.
-            snr_dB: The SNR in dB.
-            n_antennas: The dimension of the channels.
-            A: A 2D complex numpy array representing the observation matrix.
+            y: A 2D complex numpy array representing the observations (one per row).
+            noise_covariance: The noise covariance matrix.
+            n_dim: The dimension of the channels.
+            A: The observation matrix.
             n_components_or_probability:
                 If this is an integer, compute the sum of the top (highest
-                component probabilities) n_components_or_probability LMMSE
-                estimates.
+                    component probabilities) 'n_components_or_probability'
+                    LMMSE estimates.
                 If this is a float, compute the sum of as many LMMSE estimates
-                as are necessary to reach at least a cumulative component
-                probability of n_components_or_probability.
+                    as are necessary to reach at least a cumulative component
+                    probability of 'n_components_or_probability'.
+                By default, all components are used.
         """
 
         if A is None:
-            A = np.eye(n_antennas, dtype=y.dtype)
-        y_for_prediction, covs_Cy_inv = self._prepare_for_prediction(y, A, snr_dB)
+            A = np.eye(n_dim, dtype=y.dtype)
+        y_for_prediction, covs_Cy_inv = self._prepare_for_prediction(
+            y, A, noise_covariance
+        )
 
         h_est = np.zeros([y.shape[0], A.shape[-1]], dtype=complex)
         if isinstance(n_components_or_probability, int):
@@ -109,13 +110,12 @@ class GmmEstimator(gmm_cplx.GaussianMixtureCplx):
 
         return h_est
 
-    def _prepare_for_prediction(self, y, A, snr_dB):
+    def _prepare_for_prediction(self, y, A, noise_covariance):
         """
         Replace the GMM's means and covariance matrices by the means and
         covariance matrices of the observation. Further, in case of diagonal
         matrices, FFT-transform the observation.
         """
-        sigma2 = 10 ** (-snr_dB / 10)
 
         if self.gm.covariance_type == "diag":
             # raise error if A is not identity or quadratic matrix
@@ -132,9 +132,8 @@ class GmmEstimator(gmm_cplx.GaussianMixtureCplx):
 
             # update GMM covs
             covs_gm = self.gm.covariances_.copy()
-            sigma2_diag = sigma2 * np.ones(covs_gm.shape[-1])
             for i in range(covs_gm.shape[0]):
-                covs_gm[i, :] = covs_gm[i, :] + sigma2_diag
+                covs_gm[i, :] = covs_gm[i, :] + noise_covariance
             self.gm.covariances_ = covs_gm.copy()  # this has no effect
             self.gm.precisions_cholesky_ = compute_precision_cholesky(
                 covs_gm, covariance_type="diag"
@@ -157,9 +156,8 @@ class GmmEstimator(gmm_cplx.GaussianMixtureCplx):
             # update GMM covs
             covs_gm = self.covs_cplx.copy()
             covs_gm = np.matmul(np.matmul(A, covs_gm), A.conj().T)
-            sigma2_diag = sigma2 * np.eye(covs_gm.shape[-1])
             for i in range(covs_gm.shape[0]):
-                covs_gm[i, :, :] = covs_gm[i, :, :] + sigma2_diag
+                covs_gm[i, :, :] = covs_gm[i, :, :] + noise_covariance
             self.gm.covariances_ = covs_gm.copy()  # this has no effect
             self.gm.precisions_cholesky_ = compute_precision_cholesky(
                 covs_gm, covariance_type="full"
@@ -175,13 +173,12 @@ class GmmEstimator(gmm_cplx.GaussianMixtureCplx):
             )
 
         # precompute the inverse matrices
-        cov_noise = sigma2 * np.eye(y.shape[1], dtype=complex)
         covs_Cy_inv = np.zeros(
             [self.covs_cplx.shape[0], A.shape[0], A.shape[0]], dtype=complex
         )
         for i in range(self.covs_cplx.shape[0]):
             covs_Cy_inv[i, :, :] = np.linalg.pinv(
-                A @ self.covs_cplx[i, :, :] @ A.conj().T + cov_noise
+                A @ self.covs_cplx[i, :, :] @ A.conj().T + noise_covariance
             )
 
         return y_for_prediction, covs_Cy_inv

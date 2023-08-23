@@ -43,9 +43,18 @@ This repository is joint work of Michael Koller and Benedikt Fesl.
 The implementation makes use of Benedikt Fesl's repository [GMM_cplx](https://github.com/benediktfesl/GMM_cplx) which allows fitting a GMM with complex-valued quantities.
 
 ### Papers
-The first following two references provide more details and properties of the GMM estimator.
+The following two references provide more details and properties of the GMM estimator.
 
-- Koller, Fesl, Turan, Utschick, "An Asymptotically Optimal Approximation of the Conditional Mean Channel Estimator Based on Gaussian Mixture Models," ICASSP, 2022  - [[IEEEXplore](https://ieeexplore.ieee.org/document/9747226)] - [[arXiv](https://arxiv.org/abs/2111.11064)]
-- Koller, Fesl, Turan, Utschick, "An Asymptotically MSE-Optimal Estimator Based on Gaussian Mixture Models," IEEE Trans. Signal. Process., 2022 - [[IEEEXplore]](https://ieeexplore.ieee.org/document/9842343) - [[arXiv]](https://arxiv.org/abs/2112.12499)
+- Koller, Fesl, Turan, Utschick, "An Asymptotically Optimal Approximation of the Conditional Mean Channel Estimator Based on Gaussian Mixture Models," ICASSP, 2022.
+[[IEEEXplore](https://ieeexplore.ieee.org/document/9747226)] [[arXiv](https://arxiv.org/abs/2111.11064)]
+- Koller, Fesl, Turan, Utschick, "An Asymptotically MSE-Optimal Estimator Based on Gaussian Mixture Models," IEEE Trans. Signal. Process., 2022. [[IEEEXplore]](https://ieeexplore.ieee.org/document/9842343) [[arXiv]](https://arxiv.org/abs/2112.12499)
 
 The estimator has been used in all the following references.
+- N. Turan, B. Fesl, M. Grundei, M. Koller, and W. Utschick, “Evaluation of a Gaussian Mixture Model-based Channel Estimator using Measurement Data,” in *Int. Symp. Wireless Commun. Syst. (ISWCS)*, 2022. [[IEEEXplore]](https://ieeexplore.ieee.org/abstract/document/9940363)
+- B. Fesl, M. Joham, S. Hu, M. Koller, N. Turan, and W. Utschick, “Channel Estimation based on Gaussian Mixture Models with Structured Covariances,” in *56th Asilomar Conf. Signals, Syst., Comput.*, 2022, pp. 533–537. [[IEEEXplore]](https://ieeexplore.ieee.org/abstract/document/10051921)
+- B. Fesl, N. Turan, M. Joham, and W. Utschick, “Learning a Gaussian Mixture Model from Imperfect Training Data for Robust Channel Estimation,” *IEEE Wireless Commun. Lett.*, 2023. [[IEEEXplore]](https://ieeexplore.ieee.org/abstract/document/10078293)
+- M. Koller, B. Fesl, N. Turan and W. Utschick, "An Asymptotically Optimal Approximation of the Conditional Mean Channel Estimator Based on Gaussian Mixture Models," *IEEE Int. Conf. Acoust., Speech, Signal Process. (ICASSP)*, 2022, pp. 5268-5272. [[IEEEXplore]](https://ieeexplore.ieee.org/abstract/document/9747226)
+- B. Fesl, A. Faika, N. Turan, M. Joham, and W. Utschick, “Channel Estimation with Reduced Phase Allocations in RIS-Aided Systems,” in *IEEE 24th Int. Workshop Signal Process. Adv. Wireless Commun. (SPAWC)*, 2023. [[arXiv]](https://arxiv.org/abs/2211.07552)
+- N. Turan, B. Fesl, M. Koller, M. Joham, and W. Utschick, “A Versatile Low-Complexity Feedback Scheme for FDD Systems via Generative Modeling,” 2023, arXiv preprint: 2304.14373. [[arXiv]](https://arxiv.org/abs/2304.14373)
+- N. Turan, B. Fesl, and W. Utschick, "Enhanced Low-Complexity FDD System Feedback with Variable Bit Lengths via Generative Modeling," in *57th Asilomar Conf. Signals, Syst., Comput.*, 2023. [[arXiv]](https://arxiv.org/abs/2305.03427)
+- N. Turan, M. Koller, B. Fesl, S. Bazzi, W. Xu and W. Utschick, "GMM-based Codebook Construction and Feedback Encoding in FDD Systems,"in *56th Asilomar Conf. Signals, Syst., Comput.*, 2022, pp. 37-42. [[IEEEXplore]](https://ieeexplore.ieee.org/abstract/document/10052020)

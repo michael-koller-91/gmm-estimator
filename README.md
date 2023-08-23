@@ -38,6 +38,11 @@ The examples demonstrate the following:
 2. The observation matrix is a selection matrix and full GMM covariance matrices are used.
 
 ## References
+This repository is joint work of Michael Koller and Benedikt Fesl.
+### Submodule
+The implementation makes use of Benedikt Fesl's repository [GMM_cplx](https://github.com/benediktfesl/GMM_cplx) which allows fitting a GMM with complex-valued quantities.
+
+### Papers
 The first following two references provide more details and properties of the GMM estimator.
 
 - Koller, Fesl, Turan, Utschick, "An Asymptotically Optimal Approximation of the Conditional Mean Channel Estimator Based on Gaussian Mixture Models," ICASSP, 2022  - [[IEEEXplore](https://ieeexplore.ieee.org/document/9747226)] - [[arXiv](https://arxiv.org/abs/2111.11064)]

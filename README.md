@@ -123,52 +123,38 @@ The estimator follows a two-step pattern:
 
 ## 🧩 Estimation Model
 
-The package assumes a noisy linear observation model
+The package assumes a noisy linear observation model:
 
-```math
-\mathbf{y} = \mathbf{A}\mathbf{h} + \mathbf{n},
+```text
+y = A h + n
 ```
 
-where \(\mathbf{h} \in \mathbb{C}^{N}\) is the unknown complex-valued vector, \(\mathbf{A} \in \mathbb{C}^{m \times N}\) is the known observation matrix, and \(\mathbf{n}\) is zero-mean complex Gaussian noise with known covariance matrix \(\mathbf{C}_{n} \in \mathbb{C}^{m \times m}\).
+where `h` is the unknown complex-valued vector, `A` is the known observation matrix, and `n` is zero-mean complex Gaussian observation noise with known covariance matrix `Cn`.
 
 Using the estimator is a two-step process.
 
 ### Step 1: Fit the GMM prior
 
-Training data \(\{\mathbf{h}_{t}\}_{t=1}^{T}\) is used to fit a complex-valued GMM prior
+Training samples of the unknown vector are used to fit a complex-valued GMM prior:
 
-```math
-p(\mathbf{h})
-=
-\sum_{k=1}^{K}
-\pi_k\,
-\mathcal{CN}
-\left(
-\mathbf{h};
-\boldsymbol{\mu}_k,
-\mathbf{C}_k
-\right),
+```text
+p(h) = sum_k pi_k CN(h; mu_k, C_k)
 ```
 
-where \(K\) is the number of GMM components, \(\pi_k\) is the mixture weight, \(\boldsymbol{\mu}_k\) is the component mean vector, and \(\mathbf{C}_k\) is the component covariance matrix. After fitting, the GMM approximates the unknown prior distribution of \(\mathbf{h}\).
+Here, `K` is the number of GMM components, `pi_k` is the mixture weight, `mu_k` is the component mean vector, and `C_k` is the component covariance matrix. After fitting, the GMM approximates the unknown prior distribution of `h`.
 
 This step only needs to be done once and can be performed in an offline training phase.
 
 ### Step 2: Estimate from noisy observations
 
-Given the fitted GMM prior, the estimator approximates the MMSE estimate of \(\mathbf{h}\) from \(\mathbf{y}\). For each mixture component, the observation-domain model is
+Given the fitted GMM prior, the estimator approximates the MMSE estimate of `h` from `y`. For each mixture component, the observation-domain model is:
 
-```math
-\mathbf{y} \mid k
-\sim
-\mathcal{CN}
-\left(
-\mathbf{A}\boldsymbol{\mu}_k,
-\mathbf{A}\mathbf{C}_k\mathbf{A}^{\mathrm{H}} + \mathbf{C}_{n}
-\right).
+```text
+y | k ~ CN(A mu_k, A C_k A^H + Cn)
 ```
 
 The estimator computes posterior component probabilities in the observation domain and combines component-wise LMMSE estimates. Equivalently, it implements the closed-form GMM-based MMSE estimator under the fitted prior.
+
 
 ## 🧠 Estimator API
 

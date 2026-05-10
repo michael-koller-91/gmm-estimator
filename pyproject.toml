@@ -1,0 +1,93 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gmm-estimator"
+version = "0.1.0"
+description = "GMM-based estimator for linear inverse problems with complex-valued priors."
+readme = "README.md"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [
+    { name = "Michael Koller" },
+    { name = "Benedikt Fesl" },
+]
+maintainers = [
+    { name = "Benedikt Fesl" },
+]
+dependencies = [
+    "numpy>=1.23",
+    "scipy>=1.9",
+    "cplx-gmm>=0.2.0",
+]
+keywords = [
+    "complex-valued",
+    "Gaussian mixture model",
+    "GMM",
+    "conditional estimation",
+    "inverse problems",
+    "signal processing",
+    "scikit-learn",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov",
+    "ruff",
+    "build",
+    "twine",
+]
+examples = [
+    "matplotlib>=3.7",
+]
+
+[project.urls]
+Homepage = "https://github.com/michael-koller-91/gmm-estimator"
+Repository = "https://github.com/michael-koller-91/gmm-estimator"
+Issues = "https://github.com/michael-koller-91/gmm-estimator/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+extend-exclude = [
+    ".venv",
+    "build",
+    "dist",
+    "*.egg-info",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "D"]
+ignore = [
+    "D100",  # missing module docstring
+    "D104",  # missing package docstring
+    "D203",  # incompatible with D211
+    "D212",  # incompatible with D213
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["D"]
+"examples/**/*.py" = ["D"]

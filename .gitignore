@@ -1,1 +1,56 @@
+# OS / editor files
+.DS_Store
+.idea/
+.vscode/
+
+# Python caches
 __pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Build / packaging artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# uv
+# uv.lock
+
+# Jupyter
+.ipynb_checkpoints/
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.dvi
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+*.nav
+*.snm
+
+# Generated documents / data
+*.pdf
+*.csv
+
+# Project artifacts
+results/
+log/

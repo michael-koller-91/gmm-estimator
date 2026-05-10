@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-from sklearn.exceptions import NotFittedError
-
 import numpy as np
 import pytest
 from scipy.special import logsumexp
+from sklearn.exceptions import NotFittedError
 
 from gmm_estimator import GmmEstimator
 
@@ -363,8 +362,7 @@ def test_component_probabilities_match_manual_logpdf() -> None:
     manual_log_prob = _manual_complex_logpdf(y, means_y, covariances_y)
     manual_weighted_log_prob = manual_log_prob + np.log(estimator.weights_)
     expected = np.exp(
-        manual_weighted_log_prob
-        - logsumexp(manual_weighted_log_prob, axis=1)[:, None]
+        manual_weighted_log_prob - logsumexp(manual_weighted_log_prob, axis=1)[:, None]
     )
 
     np.testing.assert_allclose(probabilities, expected, rtol=1e-10, atol=1e-10)
@@ -391,10 +389,7 @@ def test_covariance_pinv_matches_manual_pinv() -> None:
 
     covariances_y_inv = np.linalg.pinv(covariances_y, hermitian=True)
     expected = np.array(
-        [
-            np.linalg.pinv(covariance_y, hermitian=True)
-            for covariance_y in covariances_y
-        ]
+        [np.linalg.pinv(covariance_y, hermitian=True) for covariance_y in covariances_y]
     )
 
     np.testing.assert_allclose(covariances_y_inv, expected)
@@ -678,3 +673,187 @@ def test_estimate_with_single_component_matches_manual_formula() -> None:
     )
 
     np.testing.assert_allclose(estimate[0], expected)
+
+
+def test_can_use_block_circulant_fft_acceleration() -> None:
+    """Test detection of the block-circulant FFT fast path."""
+    rng = np.random.default_rng(0)
+    x_train = rng.normal(size=(80, 6)) + 1j * rng.normal(size=(80, 6))
+
+    estimator = GmmEstimator(
+        n_components=2,
+        covariance_type="block-circulant",
+        blocks=(2, 3),
+        random_state=0,
+        max_iter=100,
+        init_params="random",
+    )
+    estimator.fit(x_train)
+
+    observation_matrix = 1.5 * np.eye(6, dtype=complex)
+    noise_covariance = 0.2 * np.eye(6, dtype=complex)
+
+    assert estimator._can_use_block_circulant_fft_acceleration(
+        observation_matrix,
+        noise_covariance,
+    )
+
+
+def test_cannot_use_block_circulant_fft_acceleration_for_non_scalar_observation() -> (
+    None
+):
+    """Test that non-scalar observations disable the block-circulant FFT path."""
+    rng = np.random.default_rng(0)
+    x_train = rng.normal(size=(80, 6)) + 1j * rng.normal(size=(80, 6))
+
+    estimator = GmmEstimator(
+        n_components=2,
+        covariance_type="block-circulant",
+        blocks=(2, 3),
+        random_state=0,
+        max_iter=100,
+        init_params="random",
+    )
+    estimator.fit(x_train)
+
+    observation_matrix = np.diag(np.array([1.0, 2.0, 1.0, 2.0, 1.0, 2.0]))
+    noise_covariance = 0.2 * np.eye(6, dtype=complex)
+
+    assert not estimator._can_use_block_circulant_fft_acceleration(
+        observation_matrix,
+        noise_covariance,
+    )
+
+
+@pytest.mark.parametrize("selection", [1, 2, 0.7, 1.0])
+def test_block_circulant_fft_estimate_matches_full_covariance_path(
+    selection: int | float,
+) -> None:
+    """Test that block-circulant FFT acceleration matches the full path."""
+    rng = np.random.default_rng(0)
+    x_train = rng.normal(size=(120, 6)) + 1j * rng.normal(size=(120, 6))
+
+    estimator = GmmEstimator(
+        n_components=2,
+        covariance_type="block-circulant",
+        blocks=(2, 3),
+        random_state=0,
+        max_iter=100,
+        init_params="random",
+    )
+    estimator.fit(x_train)
+
+    y = rng.normal(size=(5, 6)) + 1j * rng.normal(size=(5, 6))
+    observation_matrix = 1.5 * np.eye(6, dtype=complex)
+    noise_covariance = 0.2 * np.eye(6, dtype=complex)
+
+    fft_estimate = estimator.estimate(
+        y=y,
+        noise_covariance=noise_covariance,
+        observation_matrix=observation_matrix,
+        n_components_or_probability=selection,
+    )
+
+    full_estimate = estimator._estimate_full_covariance(
+        y=y,
+        noise_covariance=noise_covariance,
+        observation_matrix=observation_matrix,
+        n_components_or_probability=selection,
+    )
+
+    np.testing.assert_allclose(fft_estimate, full_estimate, rtol=1e-9, atol=1e-9)
+
+
+def test_block_circulant_estimate_uses_valid_fast_path_shape() -> None:
+    """Test block-circulant estimation output for the FFT-eligible case."""
+    rng = np.random.default_rng(0)
+    x_train = rng.normal(size=(120, 6)) + 1j * rng.normal(size=(120, 6))
+
+    estimator = GmmEstimator(
+        n_components=2,
+        covariance_type="block-circulant",
+        blocks=(2, 3),
+        random_state=0,
+        max_iter=100,
+        init_params="random",
+    )
+    estimator.fit(x_train)
+
+    y = rng.normal(size=(4, 6)) + 1j * rng.normal(size=(4, 6))
+    noise_covariance = 0.2 * np.eye(6, dtype=complex)
+
+    estimates = estimator.estimate(
+        y=y,
+        noise_covariance=noise_covariance,
+    )
+
+    assert estimates.shape == (4, 6)
+    assert np.iscomplexobj(estimates)
+    assert np.all(np.isfinite(estimates.real))
+    assert np.all(np.isfinite(estimates.imag))
+
+
+@pytest.mark.parametrize("covariance_type", ["diag", "spherical"])
+def test_estimate_matches_manual_estimator_for_compact_covariances(
+    covariance_type: str,
+) -> None:
+    """Test estimator output against manual implementation for compact covariances."""
+    estimator = _make_fitted_estimator()
+    estimator.covariance_type = covariance_type
+
+    if covariance_type == "diag":
+        estimator.covariances_ = np.array(
+            [
+                [1.4, 0.9],
+                [0.7, 1.2],
+            ],
+            dtype=complex,
+        )
+        covariances_x = np.array(
+            [
+                [[1.4, 0.0], [0.0, 0.9]],
+                [[0.7, 0.0], [0.0, 1.2]],
+            ],
+            dtype=complex,
+        )
+    else:
+        estimator.covariances_ = np.array([1.4, 0.7], dtype=complex)
+        covariances_x = np.array(
+            [
+                [[1.4, 0.0], [0.0, 1.4]],
+                [[0.7, 0.0], [0.0, 0.7]],
+            ],
+            dtype=complex,
+        )
+
+    y = np.array(
+        [
+            [0.7 + 0.2j, -0.1 + 0.4j, 0.2 - 0.3j],
+            [-0.2 + 0.3j, 0.5 - 0.1j, 0.4 + 0.2j],
+        ]
+    )
+    observation_matrix = np.array(
+        [
+            [1.0 + 0.0j, 0.2 - 0.1j],
+            [-0.3 + 0.2j, 0.7 + 0.0j],
+            [0.5 - 0.1j, -0.4 + 0.3j],
+        ]
+    )
+    noise_covariance = 0.2 * np.eye(3, dtype=complex)
+
+    estimate = estimator.estimate(
+        y=y,
+        noise_covariance=noise_covariance,
+        observation_matrix=observation_matrix,
+    )
+
+    expected = _manual_lmmse_estimate(
+        y=y,
+        weights=estimator.weights_,
+        means_x=estimator.means_,
+        covariances_x=covariances_x,
+        observation_matrix=observation_matrix,
+        noise_covariance=noise_covariance,
+    )
+
+    np.testing.assert_allclose(estimate, expected, rtol=1e-10, atol=1e-10)

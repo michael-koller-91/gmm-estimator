@@ -9,15 +9,22 @@ description = "GMM-based estimator for linear inverse problems with complex-valu
 readme = "README.md"
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.10"
+authors = [
+    { name = "Michael Koller" },
+    { name = "Benedikt Fesl" },
+]
+maintainers = [
+    { name = "Benedikt Fesl" },
+]
 dependencies = [
     "numpy>=1.23",
     "scipy>=1.9",
-    "cplx-gmm>=0.1.0",
+    "cplx-gmm>=0.2.0",
 ]
 keywords = [
     "complex-valued",
-    "gaussian mixture model",
+    "Gaussian mixture model",
     "GMM",
     "conditional estimation",
     "inverse problems",

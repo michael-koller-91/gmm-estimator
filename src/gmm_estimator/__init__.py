@@ -2,4 +2,4 @@
 
 from gmm_estimator.estimator import GmmEstimator
 
-__all__ = ["ConditionalGMMEstimator"]
+__all__ = ["GmmEstimator"]
